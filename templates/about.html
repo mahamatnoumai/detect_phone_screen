@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="px-3 py-3 text-center">
+            <h1 class="display-4">About this project</h1>
+            <div class="my-2">
+                <img style="max-width: 600px; width: 100%;" src="{{ url_for('static', filename='img/flask+pytorch.png') }}" alt="">
+            </div>
+            <p class="lead">This project is aimed to classify screen phone damage severity using deep learning. It's implemented with pytorch. <br> <a
+                    href="https://pytorch.org/"> Pytorch</a></p>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
