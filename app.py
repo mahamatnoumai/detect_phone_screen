@@ -4,17 +4,13 @@ import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
 from torchvision import models
-from resnet18 import ResNet
 from flask import Flask, jsonify, request, render_template
 from PIL import Image
 
 app = Flask(__name__)
 
-def ResNet18(img_channels=3, num_classes=1000):
-    return ResNet(18, Block, img_channels, num_classes)
-
 # Modelling Task
-model = ResNet18(3, 3)
+model = models.resnet18()
 num_inftr = model.fc.in_features
 model.fc = nn.Linear(num_inftr, 4)
 model = torch.load('model.pth')
