@@ -33,6 +33,10 @@ def get_prediction(image_bytes):
 	tensor = transform_image(image_bytes=image_bytes)
 	outputs = model.forward(tensor)
 	confidence, prediction = torch.max(outputs, 1)
+	confidence_percent = torch.nn.functional.softmax(outputs, dim=1)[0][prediction].item() * 100
+	print("confidence_percent:", confidence_percent)
+	if confidence_percent < 50:
+		return "low_confidence"
 	print("confidence:", confidence)
 	return class_names[prediction]
 
@@ -40,6 +44,8 @@ details = {
 	"less_damage": "Base on this model this phone screen is less damage",
 	"not_damage": "It's most likely this phone is not damage at all :D, Correct me if I am wrong ",
 	"severly_damage": "Holy Molly, I feel like this phone screen is really damage, I highly suggest you to find the nearest phone repair, to get a replacement",
+    "low_confidence": "Are you sure you've submitted the right image? The model's confidence is lower than 50%.",
+
 }
 
 @app.route('/about')
@@ -53,8 +59,8 @@ def upload_file():
 		if 'file' not in request.files:
 			return redirect(request.url)
 		file = request.files.get('file')
-		if not file:
-			return
+		if not file or file.filename == '':
+			return render_template('index.html', message='Please upload an image.')
 		img_bytes = file.read()
 		prediction_name = get_prediction(img_bytes)
 		print("predicted as: ", prediction_name)
